@@ -1,0 +1,50 @@
+services:
+  app:
+    image: node:lts
+    container_name: cont-node-pro-nestjs
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: postgresql://luisdev:luisdev@db:5432/virtualgiftsdb?schema=public
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: luisdev
+      DB_PASSWORD: luisdev
+      DB_DATABASE: virtualgiftsdb
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dev-network
+    stdin_open: true
+    tty: true
+    command: bash
+
+  db:
+    image: postgres:16-alpine
+    container_name: cont-postgres-dev
+    environment:
+      POSTGRES_USER: luisdev
+      POSTGRES_PASSWORD: luisdev
+      POSTGRES_DB: virtualgiftsdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U luisdev -d virtualgiftsdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  dev-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

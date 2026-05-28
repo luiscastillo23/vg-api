@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# NestJS
+apps/api/dist/
+/generated/prisma
+
+# Environment files — NEVER commit these
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Turborepo
+.turbo/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+
+# Claude Code - local/personal settings only
+.claude/settings.local.json
+.claude/CLAUDE.md
+
+# DO NOT ignore these — commit them:
+# .claude/settings.json       → team-wide permissions and hooks
+# .claude/skills/             → your project Skills
+# CLAUDE.md                   → project-wide instructions

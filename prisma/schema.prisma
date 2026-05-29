@@ -103,6 +103,10 @@ model User {
   ledger          LedgerEntry[]
   notifications   Notification[]
   activityLog     ActivityLog[]
+
+  @@index([role, status])        // admin list filter
+  @@index([status, createdAt])   // status-filtered pagination
+  @@index([createdAt])           // default sort
 }
 
 model UserPreferences {

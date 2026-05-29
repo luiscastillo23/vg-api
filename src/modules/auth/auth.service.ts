@@ -5,6 +5,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import type { PrismaTransactionClient } from '../../common/prisma/prisma.service';
 import type { ClerkConfig } from '../../config/env.types';
+import { UsersService } from '../users/users.service';
 
 interface ClerkWebhookEvent {
   type: string;
@@ -18,6 +19,7 @@ export class AuthService {
   constructor(
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly usersService: UsersService,
   ) {}
 
   /**
@@ -78,6 +80,15 @@ export class AuthService {
         return { received: true };
       }
       throw err;
+    }
+
+    // Emit domain event after commit — never inside the transaction callback.
+    if (event.type === 'user.created') {
+      const clerkId: string | undefined = event.data?.id;
+      if (clerkId) {
+        const user = await this.prisma.user.findUnique({ where: { clerkId } });
+        if (user) this.usersService.emitCreated(user);
+      }
     }
 
     return { received: true };

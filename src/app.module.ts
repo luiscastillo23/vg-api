@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import configuration from './config/configuration';
 import { envValidationSchema } from './config/env.schema';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ClerkAuthGuard } from './modules/auth/guards/clerk-auth.guard';
@@ -36,6 +37,7 @@ import { RolesGuard } from './modules/auth/guards/roles.guard';
     PrismaModule,
     AuthModule,
     UsersModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [

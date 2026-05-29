@@ -77,6 +77,7 @@ enum ItemKind {
 
 model User {
   id              String       @id @default(cuid())
+  clerkId         String?      @unique
   email           String       @unique
   passwordHash    String
   firstName       String
@@ -151,6 +152,18 @@ model PasswordResetToken {
   token     String   @unique
   expiresAt DateTime
   usedAt    DateTime?
+}
+
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  provider  String
+  eventId   String
+  eventType String
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  @@unique([provider, eventId])
+  @@index([provider, eventType])
 }
 
 model Category {

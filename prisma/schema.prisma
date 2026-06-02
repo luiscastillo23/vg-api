@@ -183,6 +183,8 @@ model Category {
   subcategories Subcategory[]
   products      Product[]
   services      Service[]
+
+  @@index([status, createdAt])
 }
 
 model Subcategory {
@@ -197,6 +199,9 @@ model Subcategory {
   category    Category     @relation(fields: [categoryId], references: [id])
   products    Product[]
   services    Service[]
+
+  @@index([categoryId, status])
+  @@index([categoryId, createdAt])
 }
 
 model Product {

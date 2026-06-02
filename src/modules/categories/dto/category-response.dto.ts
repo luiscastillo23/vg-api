@@ -1,0 +1,16 @@
+import { Expose, Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
+import { EntityStatus } from '../../../../generated/prisma/enums';
+
+@Exclude()
+export class CategoryResponseDto {
+  @Expose() @ApiProperty() id: string;
+  @Expose() @ApiProperty() name: string;
+  @Expose() @ApiProperty() slug: string;
+  @Expose() @ApiProperty({ nullable: true }) description: string | null;
+  @Expose() @ApiProperty({ nullable: true }) icon: string | null;
+  @Expose() @ApiProperty({ nullable: true }) image: string | null;
+  @Expose() @ApiProperty({ enum: EntityStatus }) status: EntityStatus;
+  @Expose() @ApiProperty() createdAt: Date;
+  @Expose() @ApiProperty() updatedAt: Date;
+}

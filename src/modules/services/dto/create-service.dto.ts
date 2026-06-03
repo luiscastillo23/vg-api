@@ -1,15 +1,16 @@
-﻿import {
+import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
   Min,
 } from 'class-validator';
-import { EntityStatus } from '../../../../generated/prisma/enums';
 import { Type } from 'class-transformer';
+import { EntityStatus } from '../../../../generated/prisma/enums';
+
 export class CreateServiceDto {
   @IsString() name!: string;
   @IsString() description!: string;
@@ -19,6 +20,7 @@ export class CreateServiceDto {
   @IsArray() @IsString({ each: true }) images!: string[];
   @IsOptional() @IsBoolean() bestSeller?: boolean;
   @IsOptional() @IsEnum(EntityStatus) status?: EntityStatus;
-  @IsUUID() categoryId!: string;
-  @IsOptional() @IsUUID() subcategoryId?: string;
+  // IDs are cuid()s, not UUIDs — validate as non-empty strings (see ParseObjectIdPipe).
+  @IsString() @IsNotEmpty() categoryId!: string;
+  @IsOptional() @IsString() @IsNotEmpty() subcategoryId?: string;
 }

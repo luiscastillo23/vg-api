@@ -214,7 +214,9 @@ model Product {
   salePrice     Decimal?     @db.Decimal(12, 2)
   stock         Int          @default(0)
   images        String[]
+  tags          String[]     @default([])
   popularity    Int          @default(0)
+  rating        Float        @default(0)  // denormalized avg of Review.rating; maintained by the reviews module
   featured      Boolean      @default(false)
   bestSeller    Boolean      @default(false)
   status        EntityStatus @default(ACTIVE)
@@ -231,6 +233,9 @@ model Product {
   favorites     Favorite[]
 
   @@index([categoryId, status])
+  @@index([status, popularity]) // default catalog sort + featured/bestSeller lists
+  @@index([status, createdAt])  // "newest" sort
+  @@index([tags], type: Gin)    // tag array containment
   @@index([slug])
 }
 

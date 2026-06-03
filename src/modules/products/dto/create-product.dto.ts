@@ -1,11 +1,11 @@
-﻿import {
+import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -19,9 +19,11 @@ export class CreateProductDto {
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) salePrice?: number;
   @Type(() => Number) @IsNumber() @Min(0) stock!: number;
   @IsArray() @IsString({ each: true }) images!: string[];
+  @IsOptional() @IsArray() @IsString({ each: true }) tags?: string[];
   @IsOptional() @IsBoolean() featured?: boolean;
   @IsOptional() @IsBoolean() bestSeller?: boolean;
   @IsOptional() @IsEnum(EntityStatus) status?: EntityStatus;
-  @IsUUID() categoryId!: string;
-  @IsOptional() @IsUUID() subcategoryId?: string;
+  // IDs are cuid()s, not UUIDs — validate as non-empty strings (see ParseObjectIdPipe).
+  @IsString() @IsNotEmpty() categoryId!: string;
+  @IsOptional() @IsString() @IsNotEmpty() subcategoryId?: string;
 }

@@ -12,6 +12,7 @@ import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { SubcategoriesModule } from './modules/subcategories/subcategories.module';
+import { ProductsModule } from './modules/products/products.module';
 import { UsersModule } from './modules/users/users.module';
 import { ClerkAuthGuard } from './modules/auth/guards/clerk-auth.guard';
 import { RolesGuard } from './modules/auth/guards/roles.guard';
@@ -42,6 +43,7 @@ import { RolesGuard } from './modules/auth/guards/roles.guard';
     AccountModule,
     CategoriesModule,
     SubcategoriesModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [

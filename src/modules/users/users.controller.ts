@@ -20,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
-import { FastifyReply } from 'fastify';
+import type { Response } from 'express';
 import { UsersService, makeETag } from './users.service';
 import { UserQueryDto } from './dto/user-query.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -58,7 +58,7 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'User not found' })
   async findOne(
     @Param('id', ParseObjectIdPipe) id: string,
-    @Res({ passthrough: true }) reply: FastifyReply,
+    @Res({ passthrough: true }) reply: Response,
   ) {
     const user = await this.usersService.findOne(id);
     reply.header('ETag', makeETag(user.updatedAt));
@@ -91,7 +91,7 @@ export class UsersController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() dto: UpdateRoleDto,
     @Headers('if-match') ifMatch: string | undefined,
-    @Res({ passthrough: true }) reply: FastifyReply,
+    @Res({ passthrough: true }) reply: Response,
   ) {
     const user = await this.usersService.updateRole(id, dto, ifMatch);
     reply.header('ETag', makeETag(user.updatedAt));

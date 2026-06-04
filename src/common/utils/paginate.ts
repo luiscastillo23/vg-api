@@ -7,9 +7,9 @@ export interface PaginatedResult<T> {
   hasNext: boolean;
 }
 
-interface PaginableDelegate<T, A> {
-  findMany(args: A): Promise<T[]>;
-  count(args: { where?: A extends { where?: infer W } ? W : unknown }): Promise<number>;
+interface PaginableDelegate<T> {
+  findMany(args?: any): Promise<T[]>;
+  count(args?: any): Promise<number>;
 }
 
 export const isPaginatedResult = (v: unknown): v is PaginatedResult<unknown> =>
@@ -20,9 +20,9 @@ export const isPaginatedResult = (v: unknown): v is PaginatedResult<unknown> =>
   typeof (v as PaginatedResult<unknown>).page === 'number' &&
   typeof (v as PaginatedResult<unknown>).limit === 'number';
 
-export async function paginate<T, A extends { where?: unknown; skip?: number; take?: number }>(
-  delegate: PaginableDelegate<T, A>,
-  args: A,
+export async function paginate<T>(
+  delegate: PaginableDelegate<T>,
+  args: Record<string, unknown>,
   page = 1,
   limit = 20,
 ): Promise<PaginatedResult<T>> {
@@ -32,7 +32,7 @@ export async function paginate<T, A extends { where?: unknown; skip?: number; ta
 
   const [items, total] = await Promise.all([
     delegate.findMany({ ...args, skip, take: safeLimit }),
-    delegate.count({ where: (args as { where?: unknown }).where as A extends { where?: infer W } ? W : unknown }),
+    delegate.count({ where: (args as any).where }),
   ]);
 
   const pages = Math.max(1, Math.ceil(total / safeLimit));

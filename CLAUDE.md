@@ -83,7 +83,7 @@ Full target wiring: [`docs/architecture/06-infrastructure.md`](docs/architecture
 ## Persistence
 
 - `common/prisma/PrismaModule` is `@Global()`, so `PrismaService` is injectable everywhere without re-importing.
-- The soft-delete `$use` middleware is keyed by `softDeleteModels` (currently empty). Opt a model into soft delete by adding it to that set, not by rewriting delete logic per repository.
+- **Soft delete is currently not implemented (status: removed Jun 2026).** The old `$use` middleware (keyed by `softDeleteModels`) was deleted because the `prisma-client` generator's runtime has no `$use` — calling it crashed the app at boot (`TypeError: this.$use is not a function`). `delete`/`deleteMany` are now hard deletes. Reintroducing soft delete requires a Client Extension (`$extends` / `Prisma.defineExtension`), **not** `$use` — a real design task, since a `query` extension cannot rewrite a `delete` into an `update` the way `$use` did.
 - Slow-query logging warns on queries > 250 ms — fix the index, don't raise the threshold.
 
 Full schema intent, ownership table, polymorphism rules: [`docs/architecture/02-data-model.md`](docs/architecture/02-data-model.md).

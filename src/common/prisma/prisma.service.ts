@@ -11,10 +11,6 @@ export type PrismaTransactionClient = Omit<
   '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
 >;
 
-const softDeleteModels = new Set<string>([
-  // Add model names here to opt into soft delete, e.g.: 'Product'
-]);
-
 @Injectable()
 export class PrismaService
   extends PrismaClient
@@ -39,35 +35,6 @@ export class PrismaService
         }
       },
     );
-
-    (this as any).$use(async (params: any, next: (p: any) => Promise<any>) => {
-      const model: string | undefined = params.model;
-      if (model && softDeleteModels.has(model)) {
-        if (params.action === 'delete') {
-          params.action = 'update';
-          params.args.data = { deletedAt: new Date() };
-        } else if (params.action === 'deleteMany') {
-          params.action = 'updateMany';
-          params.args.data = {
-            ...(params.args.data ?? {}),
-            deletedAt: new Date(),
-          };
-        } else if (
-          [
-            'findUnique',
-            'findFirst',
-            'findMany',
-            'count',
-            'aggregate',
-          ].includes(params.action)
-        ) {
-          params.args ??= {};
-          params.args.where ??= {};
-          params.args.where.deletedAt = null;
-        }
-      }
-      return next(params);
-    });
   }
 
   async onModuleInit(): Promise<void> {

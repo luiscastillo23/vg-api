@@ -33,6 +33,7 @@ export class UsersService {
   emitCreated(user: UserModel): void {
     this.eventEmitter.emit('user.created', { userId: user.id, email: user.email, role: user.role });
     this.logger.debug(`user.created emitted for ${user.id}`);
+    this.logger.debug(`Clerk ID for new user: ${user.clerkId}`);
   }
 
   findAll(query: UserQueryDto) {
